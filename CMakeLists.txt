@@ -17,6 +17,9 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 
+# Make CMake look for find_package scripts in ./cmake/sdl2
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
+
 # Add all headers files under the include directory
 # target_include_directories(${PROJECT_NAME} PRIVATE include)
 
