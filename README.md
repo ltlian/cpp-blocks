@@ -14,4 +14,4 @@ https://sourceforge.net/projects/vcxsrv/
 
 The server must be running in windows for SDL to find a display. It might be necessary to disable access control for the X process and to exclude it in firewall rules.
 
-The environment variable `DISPLAY` must be set correctly and will vary between systems. See `.devontainer/devontainer.json`.
+The environment variable `DISPLAY` must be set correctly and will vary between systems. See `.devcontainer/devcontainer.json`.
