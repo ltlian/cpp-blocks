@@ -1,7 +1,6 @@
 // #include <stdlib.h>
 #include <unistd.h>
 #include <iostream>
-#include <bits/stdc++.h>
 #include <SDL.h>
 // #include <SDL2_gfxPrimitives.h>
 #include <Vector.h>
