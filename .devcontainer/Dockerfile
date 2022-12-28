@@ -3,6 +3,6 @@
 ARG VARIANT=debian-11
 FROM mcr.microsoft.com/devcontainers/cpp:0-${VARIANT}
 
-# [Optional] Uncomment this section to install additional packages.
+# Install additional packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends libsdl2-dev libsdl2-gfx-dev git build-essential pkg-config cmake cmake-data
+    && apt-get -y install --no-install-recommends git build-essential pkg-config cmake cmake-data clangd libsdl2-dev libsdl2-gfx-dev
