@@ -29,18 +29,16 @@ find_package(SDL2 REQUIRED)
 #find_package(SDL2_ttf REQUIRED)
 #find_package(SDL2_net REQUIRED)
 #find_package(SDL2_mixer REQUIRED)
-#find_package(SDL2_gfx REQUIRED)
+find_package(SDL2_gfx REQUIRED)
+
 
 ### Now set up your actual target(s)
-
-# JALF: I prefer to avoid GLOB  stuff because it doesn't automatically detect if you add files, unless you manually rerun cmake
-# file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp")
-# JALF: Just explicitly list the source files you want
 add_executable(${PROJECT_NAME} "src/cpp-blocks.cpp")
-target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/include")
-target_link_libraries(${PROJECT_NAME} SDL2::Core)
-# JALF: If multiple libs you can just list them all
-#target_link_libraries(${PROJECT_NAME} SDL2::Core SDL2::Net SDL2::GFX whateverelse)
+add_library(ShapeRender src/shaperender.cpp include/ShapeRender.h)
+target_link_libraries(ShapeRender SDL2::Core SDL2::GFX)
+include_directories(${PROJECT_NAME} ${SDL2_INCLUDE_DIRS} PRIVATE "${CMAKE_SOURCE_DIR}/include")
+target_link_libraries(${PROJECT_NAME} SDL2::Core SDL2::GFX ShapeRender)
+
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

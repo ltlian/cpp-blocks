@@ -1,10 +1,12 @@
 #include <unistd.h>
-#include <iostream>
-#include <SDL.h>
-// #include <SDL2_gfxPrimitives.h>
-#include <Vector.h>
 
-const int WINDOW_WIDTH = 640;
+#include <iostream>
+
+#include "SDL2_gfxPrimitives.h"
+#include "ShapeRender.h"
+#include "Vector.h"
+
+const int WINDOW_WIDTH  = 640;
 const int WINDOW_HEIGHT = 480;
 
 #define SCREEN_WIDTH 640
@@ -44,38 +46,48 @@ int main(int argc, char *argv[])
   int size = 10;
 
   Vector grid_unit = Vector(GRID_SIZE, GRID_SIZE);
-  Vector delta = grid_unit * Vector(0, FALL_SPEED);
-  Vector block = Vector((SCREEN_WIDTH / 2) + (size / 2), 10);
+  Vector delta     = grid_unit * Vector(0, FALL_SPEED);
+  Vector block     = Vector((SCREEN_WIDTH / 2) + (size / 2), 10);
 
   // Initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO) < 0)
   {
-    std::cerr << "SDL could not initialize. Error: " << SDL_GetError() << std::endl;
+    std::cerr << "SDL could not initialize. Error: " << SDL_GetError()
+              << std::endl;
     return 1;
   }
 
   // Create the window
-  SDL_Window *window = SDL_CreateWindow("Tetris", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+  SDL_Window *window = SDL_CreateWindow( //
+          "Tetris",
+          SDL_WINDOWPOS_UNDEFINED,
+          SDL_WINDOWPOS_UNDEFINED,
+          WINDOW_WIDTH,
+          WINDOW_HEIGHT,
+          SDL_WINDOW_SHOWN);
 
   if (window == nullptr)
   {
-    std::cerr << "Window could not be created. Error: " << SDL_GetError() << std::endl;
+    std::cerr << "Window could not be created. Error: " << SDL_GetError()
+              << std::endl;
     SDL_Quit();
     return 1;
   }
 
   // Create the renderer
-  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  SDL_Renderer *renderer =
+          SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
   if (renderer == nullptr)
   {
-    std::cerr << "Renderer could not be created. Error: " << SDL_GetError() << std::endl;
+    std::cerr << "Renderer could not be created. Error: " << SDL_GetError()
+              << std::endl;
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 1;
   }
 
-  int tick = 0;
-  int turn = 0;
+  int tick      = 0;
+  int turn      = 0;
   int next_turn = 0;
 
   clock_t c_start = clock();
@@ -84,23 +96,25 @@ int main(int argc, char *argv[])
 
   Vector center = Vector(100, 100);
 
-  Vector shapeSquare[] = {
-      Vector(0, 0) + center,
-      Vector(0, 10) + center,
-      Vector(10, 10) + center,
-      Vector(10, 0) + center,
-      Vector(0, 0) + center};
+  Vector shapeSquare[] = { //
+    Vector(0, 0) + center,
+    Vector(0, 10) + center,
+    Vector(10, 10) + center,
+    Vector(10, 0) + center,
+    Vector(0, 0) + center
+  };
 
-  Vector shape[] = {
-      Vector(0, 0) + center,
-      Vector(10, 0) + center,
-      Vector(10, -10) + center,
-      Vector(20, -10) + center,
-      Vector(20, -20) + center,
-      Vector(-10, -20) + center,
-      Vector(-10, -10) + center,
-      Vector(0, -10) + center,
-      Vector(0, 0) + center};
+  Vector shape[] = { //
+    Vector(0, 0) + center,
+    Vector(10, 0) + center,
+    Vector(10, -10) + center,
+    Vector(20, -10) + center,
+    Vector(20, -20) + center,
+    Vector(-10, -20) + center,
+    Vector(-10, -10) + center,
+    Vector(0, -10) + center,
+    Vector(0, 0) + center
+  };
 
   size_t shape_size = sizeof(shape) / sizeof(shape[0]);
 
@@ -110,9 +124,9 @@ int main(int argc, char *argv[])
 
   while (running)
   {
-    c_start_turn = clock();
-    c_dlt = clock() - c_start;
-    next_turn = (c_dlt / TURN_RATE_MS);
+    c_start_turn      = clock();
+    c_dlt             = clock() - c_start;
+    next_turn         = (c_dlt / TURN_RATE_MS);
     Vector from_input = Vector(0, 0);
 
     tick++;
@@ -182,13 +196,17 @@ int main(int argc, char *argv[])
 
     for (size_t i = 0; i < shape_size; i++)
     {
-      points[i] = {shape[i].x, shape[i].y};
+      points[i] = { shape[i].x, shape[i].y };
     }
 
     SDL_RenderDrawLines(renderer, points, shape_size);
 
-    // TODO - Missing SDL_gfx
-    // Uint32 color = SDL_MapRGBA(renderer->format, r, g, b, a);
+    Uint8 r = 0;
+    Uint8 g = 222;
+    Uint8 b = 111;
+    Uint8 a = 50;
+
+    ShapeRender::triangle(renderer);
 
     SDL_RenderPresent(renderer);
 
