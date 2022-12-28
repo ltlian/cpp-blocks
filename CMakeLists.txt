@@ -7,47 +7,36 @@ project(cpp-blocks)
 include(CTest)
 enable_testing()
 
-find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
+# Generates a compile_commands.json file describing exactly how each source file is compiled
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# add_executable(tetris main.cpp)
-# Add all c source files under the src directory
-file(GLOB SOURCES "src/*.cpp")
-add_executable(${PROJECT_NAME} ${SOURCES})
+# Make CMake look for find_package scripts in ./cmake/sdl2
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
-
-# Add all headers files under the include directory
-# target_include_directories(${PROJECT_NAME} PRIVATE include)
 
 # Add compiler errors/warnings flags
 # target_compile_options(${PROJECT_NAME} PRIVATE $<$<C_COMPILER_ID:MSVC>:/W4 /WX>)
 # target_compile_options(${PROJECT_NAME} PRIVATE $<$<NOT:$<C_COMPILER_ID:MSVC>>:-Wall -Wextra -pedantic -Werror>)
 
 
-# Add SDL2 library
-# find_package(SDL2 REQUIRED)
-# target_link_libraries(${PROJECT_NAME} SDL2::Main)
-
-# Add SDL2_image library
+# Detect all required libraries before defining your own targets
+find_package(SDL2 REQUIRED)
 #find_package(SDL2_image REQUIRED)
-#target_link_libraries(${PROJECT_NAME} SDL2::Image)
-
-# Add SDL2_ttf library
 #find_package(SDL2_ttf REQUIRED)
-#target_link_libraries(${PROJECT_NAME} SDL2::TTF)
-
-# Add SDL2_net library
 #find_package(SDL2_net REQUIRED)
-#target_link_libraries(${PROJECT_NAME} SDL2::Net)
-
-# Add SDL2_mixer library
 #find_package(SDL2_mixer REQUIRED)
-#target_link_libraries(${PROJECT_NAME} SDL2::Mixer)
+#find_package(SDL2_gfx REQUIRED)
 
-# Add SDL2_gfx library
-# find_package(SDL2_gfx REQUIRED)
-# target_link_libraries(${PROJECT_NAME} SDL2::GFX)
+### Now set up your actual target(s)
+
+# JALF: I prefer to avoid GLOB  stuff because it doesn't automatically detect if you add files, unless you manually rerun cmake
+# file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp")
+# JALF: Just explicitly list the source files you want
+add_executable(${PROJECT_NAME} "src/tetris.cpp")
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/include")
+target_link_libraries(${PROJECT_NAME} SDL2::Core)
+# JALF: If multiple libs you can just list them all
+#target_link_libraries(${PROJECT_NAME} SDL2::Core SDL2::Net SDL2::GFX whateverelse)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
