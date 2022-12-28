@@ -4,28 +4,10 @@
             "name": "C/C++: g++ build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "program": "${workspaceRoot}/build/${fileBasenameNoExtension}",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
-            "environment": [
-                {
-                    "name": "DISPLAY",
-                    "value": "192.168.10.115:0.0"
-                },
-                {
-                    "name": "LIBGL_ALWAYS_INDIRECT",
-                    "value": "1"
-                },
-                {
-                    "name": "XDG_RUNTIME_DIR",
-                    "value": "/workspaces/adventofcode_2022/17/cpp/"
-                },
-                {
-                    "name": "RUNLEVEL",
-                    "value": "3"
-                },
-            ],
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
@@ -40,7 +22,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "cmake",
+            "preLaunchTask": "ninja",
             "miDebuggerPath": "/usr/bin/gdb"
         }
     ],
