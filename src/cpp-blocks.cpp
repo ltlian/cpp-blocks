@@ -1,7 +1,6 @@
 #include <iterator>
 #include <stdexcept>
 #include <unistd.h>
-#include <vector>
 
 #include <iostream>
 
@@ -12,10 +11,10 @@
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 #define GRID_SIZE 16
-#define FALL_SPEED 1
-#define TURN_RATE_MS 500
+#define TURN_RATE_MS 10000
 #define WINDOW_TITLE "Hello SDL2!"
 #define WINDOW_TEXT "Hello World!"
+const std::string aoc_input = ">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>";
 
 void PrintKeyInfo(SDL_KeyboardEvent *key)
 {
@@ -31,10 +30,8 @@ void PrintKeyInfo(SDL_KeyboardEvent *key)
 
 int main(int argc, char *argv[])
 {
-  int size = 10;
-
   Vector2 grid_unit = Vector2(GRID_SIZE, GRID_SIZE);
-  Vector2 delta     = grid_unit * Vector2(0, FALL_SPEED);
+  Vector2 delta     = grid_unit * Vector2(0, 1);
 
   // Initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -88,7 +85,7 @@ int main(int argc, char *argv[])
     (Vector2(0, 0) * GRID_SIZE) + center,
     (Vector2(1, 0) * GRID_SIZE) + center,
     (Vector2(2, 0) * GRID_SIZE) + center,
-    (Vector2(2, 0) * GRID_SIZE) + center
+    (Vector2(3, 0) * GRID_SIZE) + center
   };
 
   std::vector<Vector2> shape_cross = { //
@@ -118,7 +115,8 @@ int main(int argc, char *argv[])
   std::vector<Vector2> shape_square = { //
     (Vector2(0, 0) * GRID_SIZE) + center,
     (Vector2(0, 1) * GRID_SIZE) + center,
-    (Vector2(0, 2) * GRID_SIZE) + center
+    (Vector2(1, 0) * GRID_SIZE) + center,
+    (Vector2(1, 1) * GRID_SIZE) + center
   };
 
   std::vector<std::vector<Vector2>> shapes = {
@@ -129,21 +127,15 @@ int main(int argc, char *argv[])
   size_t               next_next_shape = 0;
   bool                 running         = true;
   std::vector<Vector2> shape           = shapes[next_shape];
+  size_t               shape_size      = std::size(shape);
   Vector2              bounds          = Vector2(SCREEN_WIDTH, SCREEN_HEIGHT);
 
   while (running)
   {
-    size_t rnd        = rand() % std::size(shapes);
-    size_t shape_size = std::size(shape);
-
-    if (next_next_shape > next_shape)
-    {
-      next_shape = next_next_shape;
-      shape      = shapes[next_shape % std::size(shapes)];
-    }
+    size_t rnd = rand() % std::size(shapes);
 
     c_start_turn       = clock();
-    c_dlt              = clock() - c_start;
+    c_dlt              = c_start_turn - c_start;
     next_turn          = (c_dlt / TURN_RATE_MS);
     Vector2 from_input = Vector2(0, 0);
 
@@ -190,12 +182,17 @@ int main(int argc, char *argv[])
 
     SDL_SetRenderDrawColor(renderer, 255, 122, 0, SDL_ALPHA_OPAQUE);
 
-    if (turn < next_turn)
+    if (next_turn > turn)
     {
-      std::string aoc_input = ">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>";
+      if (next_next_shape > next_shape)
+      {
+        next_shape = next_next_shape;
+        shape      = shapes[next_shape % std::size(shapes)];
+        shape_size = std::size(shape);
+      }
 
-      char *dr = &aoc_input[turn % aoc_input.length()];
-      switch (*dr)
+      char dr = aoc_input[turn % aoc_input.length()];
+      switch (dr)
       {
       case '>':
         from_input.x = 1;
@@ -204,7 +201,7 @@ int main(int argc, char *argv[])
         from_input.x = -1;
         break;
       default:
-        throw std::out_of_range(dr);
+        throw std::out_of_range(&dr);
       }
 
       for (size_t i = 0; i < shape_size; i++)
@@ -216,19 +213,19 @@ int main(int argc, char *argv[])
       turn = next_turn;
     }
 
-    ShapeRender::draw_grid(renderer, GRID_SIZE, bounds);
-    ShapeRender::triangle(renderer);
-    SDL_SetRenderDrawColor(renderer, 122, 122, 255, SDL_ALPHA_OPAQUE);
     ShapeRender::test3(renderer, shape, shape_size);
+
+    // ShapeRender::triangle(renderer);
+    SDL_SetRenderDrawColor(renderer, 20, 20, 20, SDL_ALPHA_OPAQUE);
+    ShapeRender::draw_grid(renderer, GRID_SIZE, bounds);
 
     SDL_RenderPresent(renderer);
 
     SDL_UpdateWindowSurface(window);
 
-    clock_t diff = clock() - c_start_turn;
+    // clock_t diff = clock() - c_start_turn;
 
-    // SDL_Delay(diff + 100);
-    SDL_Delay(100);
+    SDL_Delay(10);
   }
 
   SDL_DestroyRenderer(renderer);
