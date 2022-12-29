@@ -2,15 +2,15 @@
 #define VECTOR_H
 
 // template <typename T>
-struct Vector
+struct Vector2
 {
   int x, y;
 
-  Vector(int x, int y) : x(x), y(y)
+  Vector2(int x, int y) : x(x), y(y)
   {
   }
 
-  Vector &operator=(const Vector &other)
+  Vector2 &operator=(const Vector2 &other)
   {
     x = other.x;
     y = other.y;
@@ -29,37 +29,37 @@ struct Vector
     y += yAdd;
   }
 
-  Vector &operator+=(const Vector &vector)
+  Vector2 &operator+=(const Vector2 &vector)
   {
     add(vector.x, vector.y);
     return *this;
   }
 
-  Vector operator+(const Vector &vector)
+  Vector2 operator+(const Vector2 &vector)
   {
-    return Vector(x + vector.x, y + vector.y);
+    return Vector2(x + vector.x, y + vector.y);
   }
 
-  Vector &operator*=(const Vector &vector)
+  Vector2 &operator*=(const Vector2 &vector)
   {
     multiply(vector.x, vector.y);
     return *this;
   }
 
-  Vector operator*(const Vector &vector)
+  Vector2 operator*(const Vector2 &vector)
   {
-    return Vector(x * vector.x, y * vector.y);
+    return Vector2(x * vector.x, y * vector.y);
   }
 
-  Vector &operator*=(const int &v)
+  Vector2 &operator*=(const int &v)
   {
     multiply(v, v);
     return *this;
   }
 
-  Vector operator*(const int &v)
+  Vector2 operator*(const int &v)
   {
-    return Vector(x * v, y * v);
+    return Vector2(x * v, y * v);
   }
 };
 
