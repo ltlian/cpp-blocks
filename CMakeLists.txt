@@ -1,5 +1,3 @@
-# Stolen from https://github.com/aminosbh/falling-brick-game
-
 cmake_minimum_required(VERSION 3.0.0)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -33,12 +31,29 @@ find_package(SDL2_gfx REQUIRED)
 
 
 ### Now set up your actual target(s)
-add_executable(${PROJECT_NAME} "src/cpp-blocks.cpp")
-add_library(ShapeRender src/shaperender.cpp include/ShapeRender.h)
-target_link_libraries(ShapeRender SDL2::Core SDL2::GFX)
-include_directories(${PROJECT_NAME} ${SDL2_INCLUDE_DIRS} PRIVATE "${CMAKE_SOURCE_DIR}/include")
-target_link_libraries(${PROJECT_NAME} SDL2::Core SDL2::GFX ShapeRender)
+add_executable(
+    ${PROJECT_NAME}
+    src/main.cpp
+    src/Vector2.hpp
+    src/GridArea.hpp
+    src/ShapeRender.hpp
+    src/ShapeRender.cpp
+    src/InputLoader.hpp
+    src/InputLoader.cpp
+)
 
+# target_link_libraries(ShapeRender SDL2::Core SDL2::GFX)
+include_directories(
+    ${PROJECT_NAME}
+    ${SDL2_INCLUDE_DIRS}
+    PRIVATE "${CMAKE_SOURCE_DIR}/src/"
+)
+
+target_link_libraries(
+    ${PROJECT_NAME}
+    PRIVATE SDL2::Core
+    PRIVATE SDL2::GFX
+)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

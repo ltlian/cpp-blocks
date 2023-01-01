@@ -17,7 +17,7 @@ struct Vector2
     return *this;
   }
 
-  void multiply(int xFactor, int yFactor)
+  void multiply(const int &xFactor, const int &yFactor)
   {
     x *= xFactor;
     y *= yFactor;
@@ -35,7 +35,7 @@ struct Vector2
     return *this;
   }
 
-  Vector2 operator+(const Vector2 &vector)
+  Vector2 operator+(const Vector2 &vector) const
   {
     return Vector2(x + vector.x, y + vector.y);
   }
@@ -46,9 +46,9 @@ struct Vector2
     return *this;
   }
 
-  Vector2 operator*(const Vector2 &vector)
+  Vector2 operator*(const Vector2 &vector) const
   {
-    return Vector2(x * vector.x, y * vector.y);
+    return Vector2(vector.x * x, vector.y * y);
   }
 
   Vector2 &operator*=(const int &v)
